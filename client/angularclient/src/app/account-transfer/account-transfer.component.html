@@ -1,0 +1,37 @@
+<div class="card my-5">
+  <div class="card-body">
+      <form (ngSubmit)="onSubmit()" #accountForm="ngForm">
+      <div *ngIf="account">
+        <div class="static-row mb-5">
+          <span><label><b>Transferring from: </b></label> {{account.name}}</span>
+          <span><label><b>Balance: </b></label> {{account.balance}} {{account.currency}}</span>
+        </div>
+
+        <div class="form-group mb-5">
+          <label for="toAccount"><b>Transferring to: </b></label>
+          <select [(ngModel)]="toAccountId" class="form-control" name="toAccount" id="toAccount">
+            <option *ngFor="let account of Accounts;" value="{{account.id}}">
+              {{account.name}}      {{account.balance}}{{account.currency}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="transferAmount"><b>Amount in {{account.currency}}: </b></label>
+          <input type="number" [min]="0" [max]="account.balance" step="any" pattern="^[0-9]\d*(?:\.\d{0,25})?$"
+                 [(ngModel)]="amount" class="form-control" id="transferAmount" name="transferAmount"
+                 placeholder="Enter amount to be transferred" required #transferAmount="ngModel">
+        </div>
+        <div [hidden]="!transferAmount.errors" class="alert alert-danger">Invalid input</div>
+        <div *ngIf="transferAmount.errors?.max" class="alert alert-danger">Cannot transfer more than on your balance</div>
+      </div>
+
+      <br>
+      <br>
+        <div class="static-row">
+          <button (click)="list()" class="btn btn-success">Back to Account List</button>
+          <button type="submit" [disabled]="!accountForm.form.valid" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+  </div>
+</div>

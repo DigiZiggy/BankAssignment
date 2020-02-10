@@ -1,0 +1,26 @@
+<div class="card my-5">
+  <div class="card-body">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th class="d-none" scope="col">#</th>
+          <th scope="col">Account name</th>
+          <th scope="col">Balance</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let account of accounts">
+          <td class="d-none">{{ account.id }}</td>
+          <td>{{ account.name }}</td>
+          <td>{{ account.balance }} {{ account.currency }}</td>
+          <td>
+            <button (click)="deleteAccount(account.id)" class="btn btn-danger">Delete</button>
+            <button (click)="updateAccount(account.id)" class="btn btn-primary" style="margin-left: 10px">Edit account</button>
+            <button (click)="accountTransfer(account.id)" class="btn btn-success" style="margin-left: 10px">Transfer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
