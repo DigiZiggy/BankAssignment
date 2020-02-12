@@ -34,18 +34,19 @@ Application for managing bank accounts. One can assume that this application is 
 
 - GET **All accounts**: `/accounts`
 - GET **Account by id**: `/accounts/<id>`
-- POST **New account**: `/accounts`
-- PUT **Edit account**: `/accounts/<id>`
-- PUT **Transfer between accounts**: `/accounts/from/<from_id>/to/<to_id>`
-- DELETE **Account by id**: `/accounts/<id>`
+- POST **New account**: `/accounts/add`
+- PUT **Edit account**: `/accounts/edit/<id>`
+- POST **New transfer**: `/accounts/transfer/<targetAccount_id>`
+- DELETE **Account by id**: `/accounts/delete/<id>`
 
 
 ## How to use?
 
 To run the server
 ```
-cd SwedBank/server
+cd SwedBank
 mvn clean install
+cd server
 mvn spring-boot:run
 ```
 

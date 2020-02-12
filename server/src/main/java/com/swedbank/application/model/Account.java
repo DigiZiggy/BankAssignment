@@ -1,13 +1,19 @@
 package com.swedbank.application.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-public class Account {
+public class Account implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private BigDecimal balance;
@@ -15,9 +21,15 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private Currency currency;
 
+    @JsonIgnore
+    @OneToMany(mappedBy="sourceAccount", fetch = FetchType.EAGER)
+    private Collection<Transfer> transfersDone;
+
+    @JsonIgnore
+    @OneToMany(mappedBy="targetAccount", fetch = FetchType.EAGER)
+    private Collection<Transfer> transferReceived;
+
     public Account() {
-        this.name = "";
-        this.balance = BigDecimal.ZERO;
     }
 
     public Account(String name, BigDecimal balance, Currency currency) {
@@ -52,6 +64,22 @@ public class Account {
     }
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public Collection<Transfer> getTransfersDone() {
+        return transfersDone;
+    }
+
+    public void setTransfersDone(Collection<Transfer> transfersDone) {
+        this.transfersDone = transfersDone;
+    }
+
+    public Collection<Transfer> getTransferReceived() {
+        return transferReceived;
+    }
+
+    public void setTransferReceived(Collection<Transfer> transferReceived) {
+        this.transferReceived = transferReceived;
     }
 
     @Override

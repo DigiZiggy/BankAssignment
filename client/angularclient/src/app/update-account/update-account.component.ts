@@ -14,7 +14,7 @@ export class UpdateAccountComponent implements OnInit {
 
   id: number;
   Currency = Currency;
-  account: Account;
+  account: Account = new Account();
 
   constructor(private route: ActivatedRoute,private router: Router, private accountService: AccountService) { }
 

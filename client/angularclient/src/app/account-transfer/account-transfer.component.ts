@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Account} from "../model/account";
 import {AccountService} from "../service/account.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {first} from "rxjs/operators";
-import {FormControl, Validators} from "@angular/forms";
+import {Transfer} from "../model/transfer";
 
 @Component({
   selector: 'app-account-transfer',
@@ -13,25 +12,26 @@ import {FormControl, Validators} from "@angular/forms";
 export class AccountTransferComponent implements OnInit {
 
   id: number;
-  account: Account;
+  sourceAccount: Account;
+  targetAccount: Account;
   Accounts: Account[];
-  toAccountId: number;
+  targetAccountId: number;
   amount: bigint;
+  transfer: Transfer = new Transfer();
 
   constructor(private route: ActivatedRoute, private router: Router, private accountService: AccountService) {
   }
 
   ngOnInit() {
-    this.account = new Account();
+    this.sourceAccount = new Account();
     this.id = this.route.snapshot.params['id'];
 
     this.accountService.getAccountById(this.id)
       .subscribe(data => {
         console.log(data);
-        this.account = data;
+        this.sourceAccount = data;
       }, error => console.log(error));
 
-    console.log("id OF THIS ACCOUNT  " + this.id);
     this.accountService.getAllAccounts()
       .subscribe( data => {
         var accounts = [];
@@ -45,17 +45,19 @@ export class AccountTransferComponent implements OnInit {
   }
 
   onSubmit() {
-    // this.submitted = true;
-    console.log(this.amount);
-    console.log(this.toAccountId);
-    if(!this.toAccountId) // if a is negative,undefined,null,empty value then...
+    if(!this.targetAccountId) // if a is negative,undefined,null,empty value then...
     {
-      this.toAccountId = 1;
+      this.targetAccountId = this.Accounts[0].id;
     }
-    this.accountService.transferMoney(this.account.id, this.toAccountId, this.amount)
-      .pipe(first())
+
+    this.transfer.amount = this.amount;
+    this.transfer.sourceAccount = this.sourceAccount;
+    this.accountService.createTransfer(this.targetAccountId, this.transfer)
       .subscribe(data => console.log(data), error => console.log(error));
-    this.account = new Account();
+
+    this.sourceAccount = new Account();
+    this.transfer = new Transfer();
+
     this.router.navigate(['/accounts']);
   }
 

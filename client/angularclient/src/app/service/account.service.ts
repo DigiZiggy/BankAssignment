@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Account } from '../model/account';
 import {Observable} from "rxjs";
+import {Transfer} from "../model/transfer";
 
 @Injectable()
 export class AccountService {
@@ -17,11 +18,11 @@ export class AccountService {
   }
 
   updateAccount(id: number, value: any): Observable<Object> {
-    return this.http.put(`${this.accountsUrl}/${id}`, value);
+    return this.http.put(`${this.accountsUrl}/edit/${id}`, value);
   }
 
   deleteAccount(id: number): Observable<any> {
-    return this.http.delete(`${this.accountsUrl}/${id}`);
+    return this.http.delete(`${this.accountsUrl}/delete/${id}`);
   }
 
   getAllAccounts(): Observable<any> {
@@ -29,15 +30,10 @@ export class AccountService {
   }
 
   createAccount(account: Account): Observable<Object> {
-    return this.http.post(`${this.accountsUrl}`, account);
+    return this.http.post(`${this.accountsUrl}/add`, account);
   }
 
-  transferMoney(from_id: number, to_id: number, amount: any): Observable<Object> {
-    console.log("IN TRANSFERMONEY method client side");
-    console.log("AMOUNT IS  " + amount);
-    console.log(this.http.put(`${this.accountsUrl}/from/${from_id}/to/${to_id}?amount=${to_id}`, amount));
-    return this.http.put(`${this.accountsUrl}/from/${from_id}/to/${to_id}`,
-      {},
-      { params: { amount: amount } });
+  createTransfer(id: number, transfer: Transfer): Observable<Object> {
+    return this.http.post(`${this.accountsUrl}/transfer/${id}`, transfer);
   }
 }
