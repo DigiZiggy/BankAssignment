@@ -6,8 +6,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class Account implements Serializable {
@@ -33,6 +31,13 @@ public class Account implements Serializable {
     }
 
     public Account(String name, BigDecimal balance, Currency currency) {
+        this.name = name;
+        this.balance = balance;
+        this.currency = currency;
+    }
+
+    public Account(long id, String name, BigDecimal balance, Currency currency) {
+        this.id = id;
         this.name = name;
         this.balance = balance;
         this.currency = currency;

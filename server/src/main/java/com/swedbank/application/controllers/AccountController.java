@@ -1,9 +1,7 @@
 package com.swedbank.application.controllers;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.swedbank.application.exception.ResourceNotFoundException;
 import com.swedbank.application.model.Account;
@@ -12,7 +10,7 @@ import com.swedbank.application.repositories.AccountRepository;
 import com.swedbank.application.repositories.TransferRepository;
 import com.swedbank.application.util.TransferConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,13 +29,14 @@ public class AccountController {
     private TransferConverter transferConverter;
 
     @GetMapping("/accounts")
-    public List<Account> getAccounts() {
+    List<Account> getAccounts() {
         return (List<Account>) accountRepository.findAll();
     }
 
     @PostMapping("/accounts/add")
-    void addAccount(@RequestBody Account account) {
-        accountRepository.save(account);
+    @ResponseStatus(HttpStatus.CREATED)
+    Account addAccount(@Valid @RequestBody Account account) {
+        return accountRepository.save(account);
     }
 
     @PostMapping("/accounts/transfer/{id}")
@@ -46,7 +45,7 @@ public class AccountController {
 
         Account sourceAccount = transfer.getSourceAccount();
         Account targetAccount = accountRepository.findById(targetAccountId)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found for this id :: " + targetAccountId));
+                .orElseThrow(() -> new ResourceNotFoundException(targetAccountId));
 
         transfer.setTargetAccount(targetAccount);
 
@@ -62,35 +61,26 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/{id}")
-    public ResponseEntity<Account> getAccountById(@PathVariable(value = "id") Long accountId)
+    Account getAccountById(@PathVariable(value = "id") Long accountId)
             throws ResourceNotFoundException {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found for this id :: " + accountId));
-        return ResponseEntity.ok().body(account);
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException(accountId));
     }
 
     @PutMapping("/accounts/edit/{id}")
-    public ResponseEntity<Account> updateAccount(@PathVariable(value = "id") Long accountId,
-                                                 @Valid @RequestBody Account accountDetails) throws ResourceNotFoundException {
+    Account updateAccount(@PathVariable(value = "id") Long accountId, @Valid @RequestBody Account accountDetails)
+            throws ResourceNotFoundException {
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found for this id :: " + accountId));
+                .orElseThrow(() -> new ResourceNotFoundException(accountId));
 
         account.setName(accountDetails.getName());
         account.setBalance(accountDetails.getBalance());
         account.setCurrency(accountDetails.getCurrency());
-        final Account updatedAccount = accountRepository.save(account);
-        return ResponseEntity.ok(updatedAccount);
+        return accountRepository.save(account);
     }
 
     @DeleteMapping("/accounts/delete/{id}")
-    public Map<String, Boolean> deleteAccount(@PathVariable(value = "id") Long accountId)
-            throws ResourceNotFoundException {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found for this id :: " + accountId));
-
-        accountRepository.delete(account);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
+    void deleteAccount(@PathVariable(value = "id") Long accountId) {
+        accountRepository.deleteById(accountId);
     }
 }
