@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Account} from "../model/account";
 import {Currency} from "../model/currency";
 import {AccountService} from "../service/account.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {first} from "rxjs/operators";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-update-account',
@@ -34,11 +35,15 @@ export class UpdateAccountComponent implements OnInit {
     this.updateAccount();
   }
 
+  gotoList() {
+    this.router.navigate(['/accounts']);
+  }
+
   updateAccount() {
     this.accountService.updateAccount(this.id, this.account)
-      .subscribe(data => console.log(data), error => console.log(error));
+      .subscribe(result => {
+        this.gotoList();
+      }, error => console.error(error));
     this.account = new Account();
-
-    this.router.navigate(['/accounts']);
   }
 }

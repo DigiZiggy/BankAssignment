@@ -53,15 +53,15 @@ export class AccountTransferComponent implements OnInit {
     this.transfer.amount = this.amount;
     this.transfer.sourceAccount = this.sourceAccount;
     this.accountService.createTransfer(this.targetAccountId, this.transfer)
-      .subscribe(data => console.log(data), error => console.log(error));
+      .subscribe(result => {
+        this.gotoList();
+      }, error => console.error(error));
 
     this.sourceAccount = new Account();
     this.transfer = new Transfer();
-
-    this.router.navigate(['/accounts']);
   }
 
-  list(){
+  gotoList(){
     this.router.navigate(['accounts']);
   }
 }

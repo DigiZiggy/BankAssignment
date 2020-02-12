@@ -80,7 +80,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/accounts/delete/{id}")
-    void deleteAccount(@PathVariable(value = "id") Long accountId) {
-        accountRepository.deleteById(accountId);
+    void deleteAccount(@PathVariable(value = "id") Long id) {
+        accountRepository.deleteById(id);
     }
 }

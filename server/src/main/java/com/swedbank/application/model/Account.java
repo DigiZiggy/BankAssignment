@@ -20,11 +20,15 @@ public class Account implements Serializable {
     private Currency currency;
 
     @JsonIgnore
-    @OneToMany(mappedBy="sourceAccount", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="sourceAccount",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
     private Collection<Transfer> transfersDone;
 
     @JsonIgnore
-    @OneToMany(mappedBy="targetAccount", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="targetAccount",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
     private Collection<Transfer> transferReceived;
 
     public Account() {
