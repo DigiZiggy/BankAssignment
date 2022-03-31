@@ -58,7 +58,7 @@
     <properties>
         <rest-assured.version>3.3.0</rest-assured.version>
         <!-- plugins -->
-        <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
+        <spring-boot.version>2.5.12</spring-boot.version>
     </properties>
 
 </project>
